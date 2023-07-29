@@ -1,8 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 import os, random, string
 
 class Config(object):
@@ -41,7 +36,7 @@ class Config(object):
     if DB_ENGINE and DB_NAME and DB_USERNAME:
 
         try:
-            
+                      
             # Relational DBMS: PSQL, MySql
             SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
                 DB_ENGINE,

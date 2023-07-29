@@ -1,10 +1,4 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 import os
-
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -57,5 +51,17 @@ def create_app(config):
 
     app.register_blueprint(github_blueprint, url_prefix="/login") 
     
+    # Create the tables of this database
     configure_database(app)
+   
+    DB_ENGINE   = os.getenv('DB_ENGINE'   , None)
+    DB_USERNAME = os.getenv('DB_USERNAME' , None)
+    DB_PASS     = os.getenv('DB_PASS'     , None)
+    DB_HOST     = os.getenv('DB_HOST'     , None)
+    DB_PORT     = os.getenv('DB_PORT'     , None)
+    DB_NAME     = os.getenv('DB_NAME'     , None)
+    
+    print(DB_ENGINE, ' ***', DB_USERNAME, '***', DB_PASS, '***',DB_NAME)
+        
+    print("The database has been configurated")
     return app

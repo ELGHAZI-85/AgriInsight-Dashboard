@@ -1,8 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 import os
 from   flask_migrate import Migrate
 from   flask_minify  import Minify
@@ -16,7 +11,7 @@ from apps import create_app, db
 # WARNING: Don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
-# The configuration
+# The configuration 
 get_config_mode = 'Debug' if DEBUG else 'Production'
 
 try:
@@ -43,4 +38,5 @@ for command in [gen_api, ]:
     app.cli.add_command(command)
     
 if __name__ == "__main__":
+    print("Hello world")
     app.run()
