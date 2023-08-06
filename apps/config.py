@@ -79,4 +79,5 @@ config_dict = {
 
 API_GENERATOR = {
     "books": "Book",
-}
+    "ventilation" : "Ventilation"
+    }

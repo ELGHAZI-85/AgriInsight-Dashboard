@@ -2,9 +2,7 @@ import os
 from   flask_migrate import Migrate
 from   flask_minify  import Minify
 from   sys import exit
-
 from api_generator.commands import gen_api
-
 from apps.config import config_dict
 from apps import create_app, db
 
@@ -38,5 +36,4 @@ for command in [gen_api, ]:
     app.cli.add_command(command)
     
 if __name__ == "__main__":
-    print("Hello world")
     app.run()
