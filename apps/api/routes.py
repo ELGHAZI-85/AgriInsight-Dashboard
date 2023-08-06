@@ -1,5 +1,4 @@
 import json
-
 from flask import request
 from flask_restx import Api, Resource
 from werkzeug.datastructures import MultiDict
@@ -9,7 +8,6 @@ from apps.api.forms import *
 from apps.models    import *
 
 api = Api(blueprint)
-
 # Post -> ADD 
 # Get -> READ 
 # PUT -> UPDATE 
