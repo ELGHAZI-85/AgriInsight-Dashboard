@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styleaux.css') }}"> 
+</head>
+
+<body>
+<div class="container">
+    <div class="chatbox">
+      <div class="top-bar">
+        <div class="avatar"><p>V</p></div>
+        <div class="name">MAMInsight</div>
+        <div class="icons">
+          <i class="fas fa-phone"></i>
+          <i class="fas fa-video"></i>
+        </div>
+        <div class="menu">
+          <div class="dots"></div>
+        </div>
+      </div>
+      <div class="middle">
+        <div class="voldemort">
+
+          <div class="incoming">
+            <div class="bubble">👋 Hey there! 🌾 I'm MAMInsight, your chatty farming buddy 🤖🌱.</div>
+            <div class="bubble">Think of me as your digital farming partner, ready to cultivate insights about your agriculture activities. 
+              🚜🌻 
+            </div>
+            </div>
+          </div>
+      </div>
+
+      <form class="bottom-bar">
+        <input type="text" class="msger-input" id="textInput" placeholder="Enter your message...">
+        <button type="submit" class="msger-send-btn">Send</button>
+      </form>
+      
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    const msgerForm = get(".bottom-bar");
+    const msgerInput = get(".msger-input");
+    const msgerChat = get(".middle");
+
+    console.log(msgerChat)
+
+    msgerForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const msgText = msgerInput.value;
+
+      if (!msgText) return;
+
+      appendMessage("right", msgText);
+      msgerInput.value = "";
+      botResponse(msgText);
+    });
+
+    function appendMessage(side, text) {
+      const msgHTML = `
+          <div class="middle">
+          <div class= "voldemort">
+          <div class="incoming">
+            <div class="bubble">${text}</div>
+          </div>
+          </div>
+        </div>
+      `;
+        
+      msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+      console.log("Concaténation -> ", msgerChat)
+      msgerChat.scrollTop += 500;
+    }
+
+    function botResponse(rawText) {
+
+      // Bot Response
+      $.get("/get", { msg: rawText }).done(function (data) {
+        console.log(rawText);
+        console.log(data);
+        const msgText = data;
+        appendMessage("left", msgText);
+
+      });
+
+    }
+
+
+
+    function get(selector, root = document) {
+      return root.querySelector(selector);
+    }
+
+  </script>
+
+</body>
+</html>
