@@ -18,7 +18,6 @@ class {model_name}Route(Resource):
                    'success': True
                }}, 200
 
-    @token_required
     def post(self):
         try:
             body_of_req = request.form
@@ -50,7 +49,6 @@ class {model_name}Route(Resource):
                    'success': True
                }}, 200
 
-    @token_required
     def put(self, model_id: int):
         try:
             body_of_req = request.form
@@ -98,7 +96,6 @@ class {model_name}Route(Resource):
             'success': True
         }}
 
-    @token_required
     def delete(self, model_id: int):
         to_delete = {model_name}.query.filter_by(id=model_id)
         if to_delete.count() == 0:

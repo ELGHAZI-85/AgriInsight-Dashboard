@@ -6,36 +6,40 @@ from apps.api import blueprint
 from apps.authentication.decorators import token_required
 from apps.api.forms import *
 from apps.models    import *
+from datetime import datetime
 
 api = Api(blueprint)
+
 # Post -> ADD 
 # Get -> READ 
 # PUT -> UPDATE 
 
-@api.route('/books/', methods=['POST', 'GET', 'DELETE', 'PUT'])
-@api.route('/books/<int:model_id>/', methods=['GET', 'DELETE', 'PUT'])
-class BookRoute(Resource):
+@api.route('/ventilation/', methods=['POST', 'GET', 'DELETE', 'PUT'])
+@api.route('/ventilation/<int:model_id>/', methods=['GET', 'DELETE', 'PUT'])
+class VentilationRoute(Resource):
     def get(self, model_id: int = None):
         if model_id is None:
-            all_objects = Book.query.all()
-            output = [{'id': obj.id, **BookForm(obj=obj).data} for obj in all_objects]
+            all_objects = Ventilation.query.all()
+            output = [{'id_operation': obj.id_operation,'mois': obj.mois, 'surface': obj.surface, 'date': obj.date.strftime('%Y-%m-%d'), 'domaine': obj.domaine, 'cultures': obj.cultures, 'tache_principale': obj.tache_principale,'sous_tache':obj.sous_tache, 'effectif':obj.effectif, 'eff_hr':obj.eff_hr } for obj in all_objects]
+            print(" Output : ",output)
         else:
-            obj = Book.query.get(model_id)
+            obj = Ventilation.query.get(model_id)
             if obj is None:
                 return {
                            'message': 'matching record not found',
                            'success': False
                        }, 404
-            output = {'id': obj.id, **BookForm(obj=obj).data}
+            output = {'id': obj.id_operation, **VentilationForm(obj=obj).data}
+        
         return {
                    'data': output,
                    'success': True
                }, 200
 
-    @token_required
     def post(self):
         try:
             body_of_req = request.form
+ 
             if not body_of_req:
                 raise Exception()
         except Exception:
@@ -43,12 +47,15 @@ class BookRoute(Resource):
                 body_of_req = json.loads(request.data)
             else:
                 body_of_req = {}
-        form = BookForm(MultiDict(body_of_req))
+                
+        body_of_req = dict(body_of_req)
+        form = VentilationForm(MultiDict(body_of_req))
         if form.validate():
             try:
-                obj = Book(**body_of_req)
-                Book.query.session.add(obj)
-                Book.query.session.commit()
+                body_of_req['date'] = datetime.strptime(body_of_req['date'], '%Y-%m-%d').date()
+                obj = Ventilation(**body_of_req)
+                Ventilation.query.session.add(obj)
+                Ventilation.query.session.commit()
             except Exception as e:
                 return {
                            'message': str(e),
@@ -64,10 +71,11 @@ class BookRoute(Resource):
                    'success': True
                }, 200
 
-    @token_required
+    
     def put(self, model_id: int):
         try:
             body_of_req = request.form
+            print(body_of_req)
             if not body_of_req:
                 raise Exception()
         except Exception:
@@ -76,7 +84,7 @@ class BookRoute(Resource):
             else:
                 body_of_req = {}
 
-        to_edit_row = Book.query.filter_by(id=model_id)
+        to_edit_row = Ventilation.query.filter_by(id_operation=model_id)
 
         if not to_edit_row:
             return {
@@ -92,7 +100,7 @@ class BookRoute(Resource):
                        'success': False
                    }, 404
 
-        form = BookForm(MultiDict(body_of_req), obj=obj)
+        form = VentilationForm(MultiDict(body_of_req), obj=obj)
         if not form.validate():
             return {
                        'message': form.errors,
@@ -105,25 +113,23 @@ class BookRoute(Resource):
             value = body_of_req.get(col, None)
             if value:
                 setattr(obj, col, value)
-        Book.query.session.add(obj)
-        Book.query.session.commit()
+        Ventilation.query.session.add(obj)
+        Ventilation.query.session.commit()
         return {
             'message': 'record updated',
             'success': True
         }
 
-    @token_required
     def delete(self, model_id: int):
-        to_delete = Book.query.filter_by(id=model_id)
+        to_delete = Ventilation.query.filter_by(id_operation =model_id)
         if to_delete.count() == 0:
             return {
                        'message': 'matching record not found',
                        'success': False
                    }, 404
         to_delete.delete()
-        Book.query.session.commit()
+        Ventilation.query.session.commit()
         return {
                    'message': 'record deleted!',
                    'success': True
                }, 200
-
